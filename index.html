@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fitness Buddy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e6f2f2;
+      color: #222;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    img.banner {
+      width: 100%;
+      max-width: 550px;
+      border-radius: 10px;
+      margin: 5px 0 20px 0;
+      
+    }
+
+    h1 {
+      color: #2a5298;
+    }
+
+    .tagline {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .music-controls {
+      margin-bottom: 20px;
+    }
+
+    .music-controls button {
+      margin: 5px;
+      padding: 10px 16px;
+      background-color: #2a5298;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .music-controls button:hover {
+      background-color: #1f3a6d;
+    }
+
+    .volume {
+      margin-top: 10px;
+    }
+
+    .track-info {
+      font-size: 0.9rem;
+      color: #2a5298;
+      margin-top: 10px;
+    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #e6f2f2;
+  color: #222;
+  overflow: hidden;
+}
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Welcome to Fitness Buddy 💪</h1>
+    <p class="tagline">Your personal fitness assistant for music, motivation, and workouts</p>
+    
+    <img src="https://hasthemes.com/blog/wp-content/uploads/2022/07/zymzoo-gym-fitness-centre-bootstrap-5-template.webp" class="banner" alt="Fitness Gym Banner" />
+
+    <!-- 🎧 Music Player -->
+    <div class="music-controls">
+      <audio id="bgMusic" loop>
+        <source src="brazilian-phonk-tiktok-mix-302400.mp3" type="audio/mpeg">
+        Your browser doesn't support audio.
+      </audio>
+
+      <!-- Manual Controls -->
+      <button onclick="playMusic('workout')">Workout</button>
+      <button onclick="playMusic('relaxing')">Relaxing</button>
+      <button onclick="playMusic('motivational')">Motivational</button>
+      <button id="pauseBtn" onclick="togglePause()">⏸️ Pause</button>
+
+      <!-- Volume -->
+      <div class="volume">
+        <input type="range" min="0" max="1" step="0.01" value="0.5" onchange="adjustVolume(this.value)" />
+      </div>
+
+      <!-- Track name -->
+      <p id="trackName" class="track-info">Now Playing: Workout Track 🏋️</p>
+    </div>
+  </div>
+
+  <!-- 💬 Chatbot Script -->
+  <script>
+    // Watson Assistant
+    window.watsonAssistantChatOptions = {
+      integrationID: "a0c17220-f505-46a1-8929-656f0f6214a5",
+      region: "eu-gb",
+      serviceInstanceID: "0a37b6ab-7fef-47a8-bd6c-d835c44ba3e0",
+      onLoad: function(instance) {
+        instance.render();
+
+        // Detect responses from the chatbot
+        const observer = new MutationObserver(() => {
+          const msg = document.querySelector('[data-testid="virtual-assistant-text-response"]')?.innerText;
+          if (!msg) return;
+          if (msg.includes("Play Workout Music")) playMusic("workout");
+          if (msg.includes("Play Relaxing Music")) playMusic("relaxing");
+          if (msg.includes("Play Motivational Music")) playMusic("motivational");
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
+    };
+
+    setTimeout(() => {
+      const script = document.createElement('script');
+      script.src = "https://web-chat.global.assistant.watson.appdomain.cloud/versions/latest/WatsonAssistantChatEntry.js";
+      document.head.appendChild(script);
+    }, 0);
+
+    // Music player logic
+    function playMusic(type) {
+      const audio = document.getElementById("bgMusic");
+      const trackName = document.getElementById("trackName");
+      const pauseBtn = document.getElementById("pauseBtn");
+
+      let file = "", name = "";
+
+      if (type === "workout") {
+        file = "brazilian-phonk-tiktok-mix-302400.mp3";
+        name = "Workout Track 🏋️";
+      } else if (type === "relaxing") {
+        file = "relaxing-piano-music-248868.mp3";
+        name = "Relaxing Piano 🧘";
+      } else if (type === "motivational") {
+        file = "motivation-258263.mp3";
+        name = "Motivational Pop 🔥";
+      }
+
+      audio.src = file;
+      audio.play();
+      pauseBtn.textContent = "⏸️ Pause";
+      trackName.textContent = "Now Playing: " + name;
+    }
+
+    function togglePause() {
+      const audio = document.getElementById("bgMusic");
+      const btn = document.getElementById("pauseBtn");
+
+      if (audio.paused) {
+        audio.play();
+        btn.textContent = "⏸️ Pause";
+      } else {
+        audio.pause();
+        btn.textContent = "▶️ Resume";
+      }
+    }
+
+    function adjustVolume(val) {
+      document.getElementById("bgMusic").volume = val;
+    }
+  </script>
+
+</body>
+</html>
